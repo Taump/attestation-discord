@@ -1,5 +1,5 @@
 const { isValidDeviceAddress } = require('ocore/validation_utils');
-const { walletSessionStore } = require('attestation-kit');
+const { walletSessionStore, dictionary } = require('attestation-kit');
 
 const scope = encodeURIComponent('identify');
 
@@ -17,14 +17,13 @@ module.exports = async (request, reply) => {
     const deviceAddress = request.params.deviceAddress;
 
     if (!deviceAddress || !isValidDeviceAddress(deviceAddress)) {
-        return reply.code(400).send({ error: 'Invalid device address' });
-    }
-
-    if (!walletSessionStore.getSession(deviceAddress)) {
-        return reply.code(400).send({ error: 'We couldn\'t find your session. Please go back to the wallet app and start the authentication process again.' });
+        return reply.code(400).send({ error: dictionary.discord.INVALID_DEVICE });
     }
 
     const session = walletSessionStore.getSession(deviceAddress);
+
+    if (!session) return reply.code(400).send({ error: dictionary.discord.NO_SESSION });
+
     const id = session.get('id');
 
     const state = encodeURIComponent(deviceAddress + '_' + id);
