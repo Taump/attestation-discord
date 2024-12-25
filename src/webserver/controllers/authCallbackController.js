@@ -34,8 +34,7 @@ module.exports = async (request, reply) => {
         if (!tokenData.access_token) {
             // Something went wrong; Let's redirect the user back to auth page
 
-            reply.redirect(`/auth/discord/${deviceAddress}`);
-            return;
+            return reply.redirect(`/auth/discord/${deviceAddress}`);
         }
 
         const userResponse = await fetch('https://discord.com/api/users/@me', {
