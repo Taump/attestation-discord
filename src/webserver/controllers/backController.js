@@ -1,4 +1,4 @@
-const { utils } = require("attestation-kit");
+const { utils, dictionary } = require("attestation-kit");
 
 module.exports = (_, reply) => {
     const url = utils.generateParingBackUrl();
@@ -14,7 +14,7 @@ module.exports = (_, reply) => {
         </head>
         
         <body>
-            <div>You can now close this window.</div>
+            <div>${dictionary.discord.CAN_CLOSE_WINDOW}</div>
         </body>
         </html>
         `);
