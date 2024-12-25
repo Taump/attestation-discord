@@ -3,10 +3,12 @@ const { webserver: fastifyInstance, utils } = require("attestation-kit");
 
 const authController = require('./controllers/authController');
 const authCallbackController = require('./controllers/authCallbackController');
+const backController = require('./controllers/backController');
 
 module.exports = async () => {
     fastifyInstance.get('/auth/discord/:deviceAddress(^(?!callback$).+)', authController);
     fastifyInstance.get('/auth/discord/callback', authCallbackController);
+    fastifyInstance.get('/auth/back', backController);
 
     await fastifyInstance.listen({ port: conf.webserverPort, host: '0.0.0.0' });
 

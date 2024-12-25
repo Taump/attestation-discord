@@ -1,4 +1,7 @@
-const { isValidDeviceAddress } = require('ocore/validation_utils');
+const { walletSessionStore, utils, db, dictionary } = require('attestation-kit');
+const { isValidDeviceAddress, isValidAddress } = require('ocore/validation_utils');
+const device = require('ocore/device');
+const conf = require('ocore/conf');
 
 const {
     DISCORD_CLIENT_ID,
@@ -7,11 +10,31 @@ const {
 } = process.env;
 
 module.exports = async (request, reply) => {
-    const { code, state: deviceAddress } = request.query;
+    const { code, state = '' } = request.query;
 
-    if (!code || !deviceAddress || !isValidDeviceAddress(deviceAddress)) {
-        reply.code(400).send({ error: 'No code or state provided' });
-        return;
+    if (!code || !state || typeof state !== 'string') {
+        return reply.code(400).send({ error: dictionary.discord.NO_CODE_OR_STATE });
+    }
+
+    const [deviceAddress, sessionIdFromUrl] = state.split('_');
+
+    if (!deviceAddress || !isValidDeviceAddress(deviceAddress)) {
+        return reply.code(400).send({ error: dictionary.discord.INVALID_DEVICE });
+    }
+
+    const session = walletSessionStore.getSession(deviceAddress);
+
+    if (!session) return reply.code(400).send({ error: dictionary.discord.NO_SESSION });
+
+    const sessionId = session.get('id');
+    const walletAddress = walletSessionStore.getSessionWalletAddress(deviceAddress);
+
+    if (!walletAddress || !isValidAddress(walletAddress)) {
+        return reply.code(400).send({ error: dictionary.discord.INVALID_WALLET_ADDRESS });
+    }
+
+    if (!session || sessionId !== sessionIdFromUrl || !walletAddress) {
+        return reply.code(400).send({ error: 'Invalid session' });
     }
 
     try {
@@ -48,13 +71,35 @@ module.exports = async (request, reply) => {
         const { id, username } = userData ?? {};
 
         if (!id || !username || !deviceAddress) {
-            reply.code(400).send({ error: 'Failed to get user data' });
-            return;
+            return reply.code(400).send({ error: 'Failed to get user data' });
         }
 
+        const data = { username, userId: id };
 
-        // TODO: Save the user data to the database
-        reply.send({ id, username, deviceAddress });
+        const order = await db.getAttestationOrders({ data, address: walletAddress });
+
+        if (order) {
+            device.sendMessageToDevice(deviceAddress, 'text', dictionary.discord.ALREADY_ATTESTED + '\nUnit: ' + `https://${conf.testnet ? 'testnet' : ''}explorer.obyte.org/${order.unit}`);
+
+            return reply.redirect('/auth/back');
+        }
+
+        await db.createAttestationOrder(data, walletAddress);
+
+        device.sendMessageToDevice(deviceAddress, 'text', `Your data for attestation:
+            ID: ${id}
+            Username: ${username}
+            Wallet address: https://${conf.testnet ? 'testnet' : ''}explorer.obyte.org/address/${walletAddress}
+        `);
+
+        const unit = await utils.postAttestationProfile(walletAddress, data);
+        await db.updateUnitAndChangeStatus(data, walletAddress, unit);
+
+        walletSessionStore.deleteSession(deviceAddress);
+
+        device.sendMessageToDevice(deviceAddress, 'text', `Attestation unit: https://${conf.testnet ? 'testnet' : ''}explorer.obyte.org/${unit}`);
+
+        return reply.redirect('/auth/back');
     } catch (error) {
         request.log.error(error);
         reply.code(500).send({ error: 'Something went wrong' });
