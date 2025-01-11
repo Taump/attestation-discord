@@ -14,7 +14,7 @@ module.exports = async (request, reply) => {
         return;
     }
 
-    const deviceAddress = request.params.deviceAddress;
+    const deviceAddress = request.params.device_address;
 
     if (!deviceAddress || !isValidDeviceAddress(deviceAddress)) {
         return reply.code(400).send({ error: dictionary.discord.INVALID_DEVICE });

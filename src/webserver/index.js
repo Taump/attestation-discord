@@ -6,9 +6,9 @@ const authCallbackController = require('./controllers/authCallbackController');
 const backController = require('./controllers/backController');
 
 module.exports = async () => {
-    fastifyInstance.get('/auth/discord/:deviceAddress(^(?!callback$).+)', authController);
+    fastifyInstance.get('/auth/discord/:device_address(^(?!callback$).+)', authController);
     fastifyInstance.get('/auth/discord/callback', authCallbackController);
-    fastifyInstance.get('/auth/back', backController);
+    fastifyInstance.get('/auth/back/:order_id', backController);
 
     await fastifyInstance.listen({ port: conf.webserverPort, host: '0.0.0.0' });
 

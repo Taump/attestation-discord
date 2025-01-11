@@ -81,10 +81,10 @@ module.exports = async (request, reply) => {
         if (order) {
             device.sendMessageToDevice(deviceAddress, 'text', dictionary.discord.ALREADY_ATTESTED + '\nUnit: ' + `https://${conf.testnet ? 'testnet' : ''}explorer.obyte.org/${order.unit}`);
 
-            return reply.redirect('/auth/back');
+            return reply.redirect(`/auth/back/${order.id}`);
         }
 
-        await db.createAttestationOrder(data, walletAddress);
+        const orderId = await db.createAttestationOrder(data, walletAddress);
 
         device.sendMessageToDevice(deviceAddress, 'text', `Your data for attestation:
             ID: ${id}
@@ -99,7 +99,7 @@ module.exports = async (request, reply) => {
 
         device.sendMessageToDevice(deviceAddress, 'text', `Attestation unit: https://${conf.testnet ? 'testnet' : ''}explorer.obyte.org/${unit}`);
 
-        return reply.redirect('/auth/back');
+        return reply.redirect(`/auth/back/${orderId}`);
     } catch (error) {
         request.log.error(error);
         reply.code(500).send({ error: 'Something went wrong' });
