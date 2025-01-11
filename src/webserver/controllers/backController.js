@@ -22,6 +22,7 @@ module.exports = async (request, reply) => {
             <link rel="preconnect" href="https://fonts.googleapis.com">
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
             <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+            <style>a, a:visited {color: #b5bac1 !important}</style>
         </head>
         
         <body style="padding: 0px; margin: 0px; background: #313338; font-size: 16px;">
@@ -31,10 +32,10 @@ module.exports = async (request, reply) => {
 
                     <div><b>${order.dataKey0}</b>: ${order.dataValue0}</div>
                     <div><b>${order.dataKey1}</b>: ${order.dataValue1}</div>
-                    <div><b>address</b>: <a target="_blank" style="color: #b5bac1r;" href="https://${conf.testnet ? 'testnet' : ''}explorer.obyte.org/address/${walletAddress}">${walletAddress}</a></div>
+                    <div><b>address</b>: <a target="_blank" href="https://${conf.testnet ? 'testnet' : ''}explorer.obyte.org/address/${walletAddress}">${walletAddress}</a></div>
 
                     <div style="margin-top: 15px;">
-                        <a href="${url}" style="display: inline-block; padding: 10px 20px; background: #5765f2; color: #f2f3f5; text-decoration: none; border-radius: 5px;">Back to your wallet</a>
+                        <a href="${url}" style="display: inline-block; padding: 10px 20px; background: #5765f2; color: #f2f3f5 !important; text-decoration: none; border-radius: 5px;">Back to your wallet</a>
                     </div>
                 </div>
             </div>
