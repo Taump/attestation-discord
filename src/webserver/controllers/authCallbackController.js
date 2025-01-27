@@ -80,6 +80,7 @@ module.exports = async (request, reply) => {
 
         if (order) {
             device.sendMessageToDevice(deviceAddress, 'text', dictionary.discord.ALREADY_ATTESTED + '\nUnit: ' + `https://${conf.testnet ? 'testnet' : ''}explorer.obyte.org/${order.unit}`);
+            device.sendMessageToDevice(deviceAddress, 'text', `If you want to re-attest with another wallet address, please use [/attest](command:attest) command. `);
 
             return reply.redirect(`/auth/back/${order.id}`);
         }
@@ -98,6 +99,7 @@ module.exports = async (request, reply) => {
         walletSessionStore.deleteSession(deviceAddress);
 
         device.sendMessageToDevice(deviceAddress, 'text', `Attestation unit: https://${conf.testnet ? 'testnet' : ''}explorer.obyte.org/${unit}`);
+        device.sendMessageToDevice(deviceAddress, 'text', `If you want to re-attest with another wallet address, please use [/attest](command:attest) command.`);
 
         return reply.redirect(`/auth/back/${orderId}`);
     } catch (error) {
