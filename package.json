@@ -1,5 +1,5 @@
 {
-  "name": "attestation-discord",
+  "name": "discord-attestation",
   "version": "1.0.4",
   "main": "src/index.js",
   "scripts": {
