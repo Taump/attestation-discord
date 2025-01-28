@@ -79,7 +79,7 @@ module.exports = async (request, reply) => {
         const order = await db.getAttestationOrders({ data, address: walletAddress });
 
         if (order) {
-            device.sendMessageToDevice(deviceAddress, 'text', dictionary.discord.ALREADY_ATTESTED + '\nUnit: ' + `https://${conf.testnet ? 'testnet' : ''}explorer.obyte.org/${order.unit}`);
+            device.sendMessageToDevice(deviceAddress, 'text', dictionary.discord.ATTESTED + '\nUnit: ' + `https://${conf.testnet ? 'testnet' : ''}explorer.obyte.org/${order.unit}`);
             device.sendMessageToDevice(deviceAddress, 'text', `If you want to re-attest with another wallet address, please use [/attest](command:attest) command. `);
 
             return reply.redirect(`/auth/back/${order.id}`);

@@ -26,7 +26,7 @@ class DiscordStrategy extends BaseStrategy {
 
             const url = process.env.domain + `/auth/discord/${deviceAddress}`;
 
-            device.sendMessageToDevice(deviceAddress, 'text', dictionary.discord.ALREADY_VERIFIED);
+            device.sendMessageToDevice(deviceAddress, 'text', dictionary.discord.VERIFIED);
             device.sendMessageToDevice(deviceAddress, 'text', dictionary.discord.URL_LINK + '\n' + url);
         } else {
             return device.sendMessageToDevice(deviceAddress, 'text', dictionary.common.INVALID_WALLET_ADDRESS);
