@@ -94,6 +94,7 @@ module.exports = async (request, reply) => {
         `);
 
         const unit = await utils.postAttestationProfile(walletAddress, data);
+
         await db.updateUnitAndChangeStatus(data, walletAddress, unit);
 
         walletSessionStore.deleteSession(deviceAddress);
