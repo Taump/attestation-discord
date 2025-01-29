@@ -33,7 +33,7 @@ class DiscordStrategy extends BaseStrategy {
         }
     }
 
-    onWalletPaired(deviceAddress) {
+    onDevicePaired(deviceAddress) {
         device.sendMessageToDevice(deviceAddress, 'text', dictionary.common.WELCOME);
         device.sendMessageToDevice(deviceAddress, 'text', dictionary.wallet.ASK_ADDRESS);
     }
