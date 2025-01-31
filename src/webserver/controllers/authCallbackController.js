@@ -26,7 +26,7 @@ module.exports = async (request, reply) => {
 
     if (!session) return reply.code(400).send({ error: dictionary.discord.NO_SESSION });
 
-    const sessionId = session.get('id');
+    const sessionId = session.id;
     const walletAddress = await walletSessionStore.getSessionWalletAddress(deviceAddress);
 
     if (!walletAddress || !isValidAddress(walletAddress)) {

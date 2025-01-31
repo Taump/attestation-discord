@@ -24,7 +24,7 @@ module.exports = async (request, reply) => {
 
     if (!session) return reply.code(400).send({ error: dictionary.discord.NO_SESSION });
 
-    const id = session.get('id');
+    const id = session.id;
 
     const state = encodeURIComponent(deviceAddress + '_' + id);
 
