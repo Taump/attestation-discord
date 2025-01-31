@@ -33,7 +33,7 @@ class DiscordStrategy extends BaseStrategy {
         }
     }
 
-    onDevicePaired(deviceAddress) {
+    onAttestationProcessRequested(deviceAddress) {
         device.sendMessageToDevice(deviceAddress, 'text', dictionary.discord.WELCOME);
         device.sendMessageToDevice(deviceAddress, 'text', dictionary.wallet.ASK_ADDRESS);
     }
