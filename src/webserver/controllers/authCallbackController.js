@@ -22,12 +22,12 @@ module.exports = async (request, reply) => {
         return reply.code(400).send({ error: dictionary.discord.INVALID_DEVICE });
     }
 
-    const session = walletSessionStore.getSession(deviceAddress);
+    const session = await walletSessionStore.getSession(deviceAddress);
 
     if (!session) return reply.code(400).send({ error: dictionary.discord.NO_SESSION });
 
     const sessionId = session.get('id');
-    const walletAddress = walletSessionStore.getSessionWalletAddress(deviceAddress);
+    const walletAddress = await walletSessionStore.getSessionWalletAddress(deviceAddress);
 
     if (!walletAddress || !isValidAddress(walletAddress)) {
         return reply.code(400).send({ error: dictionary.discord.INVALID_WALLET_ADDRESS });
@@ -97,7 +97,7 @@ module.exports = async (request, reply) => {
 
         await db.updateUnitAndChangeStatus(data, walletAddress, unit);
 
-        walletSessionStore.deleteSession(deviceAddress);
+        await walletSessionStore.deleteSession(deviceAddress);
 
         device.sendMessageToDevice(deviceAddress, 'text', `Attestation unit: https://${conf.testnet ? 'testnet' : ''}explorer.obyte.org/${unit}`);
         device.sendMessageToDevice(deviceAddress, 'text', `If you want to re-attest with another wallet address, please use [attest](command:attest) command.`);

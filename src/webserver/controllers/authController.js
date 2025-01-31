@@ -20,7 +20,7 @@ module.exports = async (request, reply) => {
         return reply.code(400).send({ error: dictionary.discord.INVALID_DEVICE });
     }
 
-    const session = walletSessionStore.getSession(deviceAddress);
+    const session = await walletSessionStore.getSession(deviceAddress);
 
     if (!session) return reply.code(400).send({ error: dictionary.discord.NO_SESSION });
 

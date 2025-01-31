@@ -19,10 +19,10 @@ class DiscordStrategy extends BaseStrategy {
         // Nothing to do here
     }
 
-    walletAddressVerified(deviceAddress, walletAddress) {
+    async walletAddressVerified(deviceAddress, walletAddress) {
         if (this.validate.isWalletAddress(walletAddress)) {
-            this.sessionStore.createSession(deviceAddress, true);
-            this.sessionStore.setSessionWalletAddress(deviceAddress, walletAddress);
+            await this.sessionStore.createSession(deviceAddress, true);
+            await this.sessionStore.setSessionWalletAddress(deviceAddress, walletAddress);
 
             const url = process.env.domain + `/auth/discord/${deviceAddress}`;
 
