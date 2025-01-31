@@ -1,4 +1,5 @@
 module.exports = {
+    WELCOME: 'Welcome to Discord Attestation Bot',
     CAN_CLOSE_WINDOW: 'You can now close this window.',
     NO_SESSION: 'We couldn\'t find your session. Please go back to the wallet app and start the authentication process again.',
     INVALID_DEVICE: 'Invalid device address',
@@ -7,5 +8,4 @@ module.exports = {
     ALREADY_ATTESTED: 'This wallet is already attested with the same data.',
     VERIFIED: 'Your wallet address has been successfully verified.',
     URL_LINK: 'You\'re almost done! Please follow the link to continue: '
-
 }
