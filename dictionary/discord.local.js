@@ -7,5 +7,5 @@ module.exports = {
     NO_CODE_OR_STATE: 'We didn\'t receive \'code\' or \'state.\' Make sure you\'re using the correct link, then try again.',
     ALREADY_ATTESTED: 'This wallet is already attested with the same data.',
     VERIFIED: 'Your wallet address has been successfully verified.',
-    URL_LINK: 'You\'re almost done! Please follow the link to continue: '
+    URL_LINK: 'You\'re almost done! Please follow the link to confirm your discord account: '
 }
