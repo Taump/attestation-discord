@@ -77,15 +77,18 @@ module.exports = async (request, reply) => {
         const data = { username, userId: id };
 
         const order = await db.getAttestationOrders({ data, address: walletAddress });
+        let orderId;
 
-        if (order) {
+        if (order && order.status === 'attested') {
             device.sendMessageToDevice(deviceAddress, 'text', dictionary.discord.ALREADY_ATTESTED + '\nUnit: ' + `https://${conf.testnet ? 'testnet' : ''}explorer.obyte.org/${order.unit}`);
             device.sendMessageToDevice(deviceAddress, 'text', `If you want to attest another wallet address or discord account, please use [attest](command:attest) command.`);
 
             return reply.redirect(`/auth/back/${order.id}`);
+        } else if (order) { // an order exists but not attested
+            orderId = order.id;
+        } else { // no order exists
+            orderId = await db.createAttestationOrder(data, walletAddress);
         }
-
-        const orderId = await db.createAttestationOrder(data, walletAddress);
 
         device.sendMessageToDevice(deviceAddress, 'text', `Your data for attestation:
             ID: ${id}
@@ -104,7 +107,7 @@ module.exports = async (request, reply) => {
 
         return reply.redirect(`/auth/back/${orderId}`);
     } catch (error) {
-        request.log.error(error);
-        reply.code(500).send({ error: 'Something went wrong' });
+        reply.code(500).send({ error: 'Something went wrong', message: error.message });
+        utils.logger.error("Error in auth callback: " + error);
     }
 };
