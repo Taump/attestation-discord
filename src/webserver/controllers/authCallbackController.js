@@ -107,7 +107,6 @@ module.exports = async (request, reply) => {
 
         return reply.redirect(`/auth/back/${orderId}`);
     } catch (error) {
-        request.log.error(error);
         reply.code(500).send({ error: 'Something went wrong', message: error.message });
         utils.logger.error("Error in auth callback: " + error);
     }
