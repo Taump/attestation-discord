@@ -15,6 +15,7 @@ module.exports = async (request, reply) => {
     }
 
     const deviceAddress = request.params.device_address;
+    const { sessionId } = request.query;
 
     if (!deviceAddress || !isValidDeviceAddress(deviceAddress)) {
         return reply.code(400).send({ error: dictionary.discord.INVALID_DEVICE });
@@ -25,6 +26,8 @@ module.exports = async (request, reply) => {
     if (!session) return reply.code(400).send({ error: dictionary.discord.NO_SESSION });
 
     const id = session.id;
+
+    if (!sessionId || sessionId !== id) return reply.code(400).send({ error: 'Invalid session' });
 
     const state = encodeURIComponent(deviceAddress + '_' + id);
 

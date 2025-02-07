@@ -21,10 +21,10 @@ class DiscordStrategy extends BaseStrategy {
 
     async walletAddressVerified(deviceAddress, walletAddress) {
         if (this.validate.isWalletAddress(walletAddress)) {
-            await this.sessionStore.createSession(deviceAddress, true);
+            const session = await this.sessionStore.createSession(deviceAddress, true);
             await this.sessionStore.setSessionWalletAddress(deviceAddress, walletAddress);
 
-            const url = process.env.domain + `/auth/discord/${deviceAddress}`;
+            const url = process.env.domain + `/auth/discord/${deviceAddress}?sessionId=${session.id}`;
 
             device.sendMessageToDevice(deviceAddress, 'text', dictionary.discord.VERIFIED);
             device.sendMessageToDevice(deviceAddress, 'text', dictionary.discord.URL_LINK + '\n' + url);
