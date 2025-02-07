@@ -1,0 +1,1 @@
+*/20 * * * * cd discord-attestation; node check_daemon.js 1>>~/.config/discord-attestation/check_daemon.log 2>>~/.config/discord-attestation/check_daemon.err
